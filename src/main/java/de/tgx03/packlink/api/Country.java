@@ -121,7 +121,7 @@ public class Country {
 	 * @param code The code to add.
 	 */
 	public void addPostalCode(@NotNull String code) {
-		validCodes.add(code);
+		if (!"".equals(code))validCodes.add(code);
 	}
 
 	/**
