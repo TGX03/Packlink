@@ -121,7 +121,7 @@ public class Service implements Serializable {
 
 	@Override
 	public String toString() {
-		return carrier + serviceName;
+		return carrier + " " + serviceName;
 	}
 
 	@Override
