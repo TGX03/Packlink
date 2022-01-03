@@ -53,7 +53,7 @@ public class Address {
 	 * @return The API-fitting string for the source address.
 	 */
 	protected String toSourceAddress() {
-		return FROM_COUNTRY + "=" + country.iso + "&" + FROM_ZIP + "=" + zip;
+		return FROM_COUNTRY + "=" + country.iso + "&" + FROM_ZIP + "=" + URLEncoder.encode(zip, StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Address {
 	 * @return The API-fitting string for the target address.
 	 */
 	protected String toDestinationAddress() {
-		return TO_COUNTRY + "=" + country.iso + "&" + TO_ZIP + "=" + zip;
+		return TO_COUNTRY + "=" + country.iso + "&" + TO_ZIP + "=" + URLEncoder.encode(zip, StandardCharsets.UTF_8);
 	}
 
 	/**
