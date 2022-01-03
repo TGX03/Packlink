@@ -35,15 +35,15 @@ public class Parcel {
 	/**
 	 * The height of this package.
 	 */
-	public final int height;
+	public final short height;
 	/**
 	 * The length of this package.
 	 */
-	public final int length;
+	public final short length;
 	/**
 	 * The width of this package.
 	 */
-	public final int width;
+	public final short width;
 	/**
 	 * The weight of this package.
 	 */
@@ -70,7 +70,7 @@ public class Parcel {
 	 * @param length The length of the package in cm.
 	 * @param width  The width of the package in cm.
 	 */
-	public Parcel(@NotNull String weight, int height, int length, int width) {
+	public Parcel(@NotNull String weight, short height, short length, short width) {
 		this.weight = weight;
 		this.length = length;
 		this.width = width;
