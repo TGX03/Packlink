@@ -110,7 +110,7 @@ public class Parcel {
 	public String toString() {
 		String result = weight + "Kg";
 		if (height > 0 && width > 0 && length > 0) {
-			result = result + " " + length + "*" + width + "*" + height;
+			result = result + " " + length + "×" + width + "×" + height;
 		}
 		return result;
 	}
