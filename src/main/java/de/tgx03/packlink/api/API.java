@@ -142,16 +142,14 @@ public final class API {
 					latch.countDown();
 				}
 			}).start();
-
-
-			// Wait for the threads to finish
-			try {
-				latch.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (exception.exception != null) throw exception.exception; // Throw the first exception that occurred.
 		}
+		// Wait for the threads to finish
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		if (exception.exception != null) throw exception.exception; // Throw the first exception that occurred.
 	}
 
 	/**
