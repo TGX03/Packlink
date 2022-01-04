@@ -35,6 +35,10 @@ public class Service implements Serializable {
 	 * How the duration of the shipment gets specified.
 	 */
 	private static final String DURATION = "transit_time";
+	/**
+	 * How it's specified whether this is a shipment that gets shipped to the receiver or needs to be picked up.
+	 */
+	private static final String DELIVERY_TO_PARCELSHOP = "delivery_to_parcelshop";
 
 	/**
 	 * The tax rate to apply when requesting the price with tax.
@@ -65,6 +69,10 @@ public class Service implements Serializable {
 	 * Whether this is a shipment that gets picked up or needs to be dropped off.
 	 */
 	public final boolean pickup;
+	/**
+	 * Whether the service is shipped to a full address or needs to be picked up at a parcel shop.
+	 */
+	public final boolean deliveryToParcelshop;
 
 	/**
 	 * Create a new service from a given JSON string.
@@ -78,6 +86,7 @@ public class Service implements Serializable {
 		serviceType = Type.parseString(queryResult.getString(TYPE));
 		pickup = !queryResult.getBoolean(DROP_OFF);
 		duration = Byte.parseByte(queryResult.getString(DURATION).replace(" DAYS", ""));
+		deliveryToParcelshop = queryResult.getBoolean(DELIVERY_TO_PARCELSHOP);
 	}
 
 	/**
@@ -90,13 +99,14 @@ public class Service implements Serializable {
 	 * @param duration     The duration of the shipment.
 	 * @param pickup       Whether the shipment will be picked up or needs to be dropped off.
 	 */
-	protected Service(String carrier, String serviceName, int priceInCents, Type serviceType, byte duration, boolean pickup) {
+	protected Service(String carrier, String serviceName, int priceInCents, Type serviceType, byte duration, boolean pickup, boolean parcelshop) {
 		this.carrier = carrier;
 		this.serviceName = serviceName;
 		this.priceInCents = priceInCents;
 		this.serviceType = serviceType;
 		this.duration = duration;
 		this.pickup = pickup;
+		this.deliveryToParcelshop = parcelshop;
 	}
 
 	/**
