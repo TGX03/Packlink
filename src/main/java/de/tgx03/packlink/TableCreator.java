@@ -147,6 +147,14 @@ public final class TableCreator {
 					Row row = sheet.createRow(currentRow);
 					row.createCell(0).setCellValue(country.name);
 					Service cheapest = services[0];
+					if (cheapest.deliveryToParcelshop) {
+						for (Service service : services) {
+							if (!service.deliveryToParcelshop) {
+								cheapest = service;
+								break;
+							}
+						}
+					}
 					if (cheapest.serviceType == Service.Type.EXPRESS) {
 						row.createCell(3).setCellValue(cheapest.toString());
 						row.createCell(4).setCellValue(cheapest.getPriceWithTax());
