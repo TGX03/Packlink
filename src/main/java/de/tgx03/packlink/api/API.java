@@ -1,6 +1,5 @@
 package de.tgx03.packlink.api;
 
-import de.tgx03.ThreadWaiter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
@@ -9,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collection;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * The class used for communicating with the Packlink API.
@@ -121,34 +122,30 @@ public final class API {
 	 * @throws IOException I dunno, look at the message. Multiple such exceptions may have occurred, however only the first one gets thrown.
 	 */
 	public static void initializePostalCodes() throws IOException {
-
-		final ThreadWaiter waiter = new ThreadWaiter(); // To make this thread wait until all the countries have been processed.
 		ExceptionHolder exception = new ExceptionHolder();  // To store any exception that may occur in any of the threads. Only the first one is saved.
+		Collection<Country> countries = Country.getAllCountries();
+		CountDownLatch latch = new CountDownLatch(countries.size());
+		for (Country country : countries) {
 
-		synchronized (waiter) {
-			for (Country country : Country.getAllCountries()) {
-				waiter.incrementThreshold();
-
-				// Gets done in multiple threads as that speeds it up massively.
-				new Thread(() -> {
-					String url = API + POSTAL_CODES + country.iso + LANGUAGE + "&q=";   // Don't ask me why the q is required.
-					try {
-						JSONArray arr = new JSONArray(queryURL(url));
-						for (int i = 0; i < arr.length(); i++) {
-							country.addPostalCode(arr.getJSONObject(i).getString(ZIP_CODE));
-						}
-					} catch (IOException e) {
-						if (exception.exception == null) exception.exception = e;
-					} finally {
-						waiter.increment();
+			// Gets done in multiple threads as that speeds it up massively.
+			new Thread(() -> {
+				String url = API + POSTAL_CODES + country.iso + LANGUAGE + "&q=";   // Don't ask me why the q is required.
+				try {
+					JSONArray arr = new JSONArray(queryURL(url));
+					for (int i = 0; i < arr.length(); i++) {
+						country.addPostalCode(arr.getJSONObject(i).getString(ZIP_CODE));
 					}
-				}).start();
+				} catch (IOException e) {
+					if (exception.exception == null) exception.exception = e;
+				} finally {
+					latch.countDown();
+				}
+			}).start();
 
-			}
 
 			// Wait for the threads to finish
 			try {
-				waiter.await();
+				latch.await();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
