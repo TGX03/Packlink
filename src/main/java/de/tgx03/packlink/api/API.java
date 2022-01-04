@@ -133,7 +133,8 @@ public final class API {
 				try {
 					JSONArray arr = new JSONArray(queryURL(url));
 					for (int i = 0; i < arr.length(); i++) {
-						country.addPostalCode(arr.getJSONObject(i).getString(ZIP_CODE));
+						String code = arr.getJSONObject(i).getString(ZIP_CODE);
+						if (!code.isBlank()) country.addPostalCode(arr.getJSONObject(i).getString(ZIP_CODE));
 					}
 				} catch (IOException e) {
 					if (exception.exception == null) exception.exception = e;
