@@ -42,9 +42,10 @@ public final class TableCreator {
 
 	/**
 	 * Creates a new table creator.
-	 * @param fileOut The output file.
+	 *
+	 * @param fileOut       The output file.
 	 * @param sourceAddress The source of the parcels.
-	 * @param parcels All the parcels to ship.
+	 * @param parcels       All the parcels to ship.
 	 */
 	public TableCreator(String fileOut, Address sourceAddress, Parcel... parcels) {
 		this.parcels = parcels;
@@ -75,6 +76,7 @@ public final class TableCreator {
 
 	/**
 	 * Generates a parcel from its string.
+	 *
 	 * @param parcelDescriptor The string representing the parcel.
 	 * @return The generated parcel object.
 	 */
@@ -89,8 +91,9 @@ public final class TableCreator {
 
 	/**
 	 * Start the creator
+	 *
 	 * @throws InterruptedException I dunno.
-	 * @throws IOException Probably when an error during transmission or writing occurs.
+	 * @throws IOException          Probably when an error during transmission or writing occurs.
 	 */
 	public void run() throws InterruptedException, IOException {
 		Workbook workbook = new XSSFWorkbook();
@@ -120,8 +123,9 @@ public final class TableCreator {
 
 	/**
 	 * Query a parcel and write the result to the given sheet.
+	 *
 	 * @param parcel The parcel to query.
-	 * @param sheet The sheet to write to.
+	 * @param sheet  The sheet to write to.
 	 * @throws IOException I dunno.
 	 */
 	private void parcelToSheet(Parcel parcel, Sheet sheet) throws IOException {
