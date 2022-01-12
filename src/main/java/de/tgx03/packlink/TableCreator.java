@@ -5,6 +5,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -150,35 +152,34 @@ public final class TableCreator {
 					currentRow++;
 					Row row = sheet.createRow(currentRow);
 					row.createCell(0).setCellValue(country.name);
-					Service cheapest = services[0];
-					if (cheapest.deliveryToParcelshop) {
-						for (Service service : services) {
-							if (!service.deliveryToParcelshop) {
-								cheapest = service;
-								break;
-							}
-						}
-					}
-					if (cheapest.serviceType == Service.Type.EXPRESS) {
-						row.createCell(3).setCellValue(cheapest.toString());
-						row.createCell(4).setCellValue(cheapest.getPriceWithTax());
-					} else {
-						Service express = null;
+					Service cheapest = getCheapest(services);
+					Service express = getExpress(services);
+					if (cheapest != null && cheapest != express) {
 						row.createCell(1).setCellValue(cheapest.toString());
 						row.createCell(2).setCellValue(cheapest.getPriceWithTax());
-						for (Service service : services) {
-							if (service.serviceType == Service.Type.EXPRESS) {
-								express = service;
-								break;
-							}
-						}
-						if (express != null) {
-							row.createCell(3).setCellValue(express.toString());
-							row.createCell(4).setCellValue(express.getPriceWithTax());
-						}
+					}
+					if (express != null) {
+						row.createCell(3).setCellValue(express.toString());
+						row.createCell(4).setCellValue(express.getPriceWithTax());
 					}
 				}
 			}
 		}
+	}
+
+	@Nullable
+	private Service getExpress(@NotNull Service[] services) throws IllegalArgumentException {
+		for (Service service : services) {
+			if (service.serviceType == Service.Type.EXPRESS && !service.deliveryToParcelshop && !service.serviceName.contains("Dokumente")) return service;
+		}
+		return null;
+	}
+
+	@Nullable
+	private Service getCheapest(@NotNull Service[] services) throws IllegalArgumentException {
+		for (Service service : services) {
+			if (!service.deliveryToParcelshop && !service.serviceName.contains("Dokumente")) return service;
+		}
+		return null;
 	}
 }
