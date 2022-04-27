@@ -2,6 +2,7 @@ package de.tgx03.packlink.api;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.Objects;
 /**
  * A single parcel to be shipped.
  */
-public class Parcel {
+public class Parcel implements Serializable {
 
 	/**
 	 * The string specifying which package this is.
