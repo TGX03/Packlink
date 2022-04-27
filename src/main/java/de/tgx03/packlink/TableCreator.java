@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Pattern;
 
 /**
  * A class that calculates the prices for all locations for given parcels.
@@ -28,7 +29,10 @@ public final class TableCreator {
 	 * The tax rate to apply.
 	 */
 	private static final double tax = 0.2;
-
+	/**
+	 * THe pattern to test if a String is already a parcel or the language to be set.
+	 */
+	private static final Pattern LANG_PATTERN = Pattern.compile("[a-z][a-z]_[A-Z][A-Z]");
 	/**
 	 * All the parcels to calculate the prices for.
 	 */
@@ -67,9 +71,14 @@ public final class TableCreator {
 		API.initializeCountries();
 		API.initializePostalCodes();
 		Service.setTax(tax);
-		Parcel[] parcels = new Parcel[args.length - 4];
+		int differentArguments = 4;
+		Parcel[] parcels = new Parcel[args.length - differentArguments];
+		if (LANG_PATTERN.matcher(args[4]).matches()) {
+			API.setLanguage(args[4]);
+			differentArguments++;
+		}
 		for (int i = 0; i < parcels.length; i++) {
-			parcels[i] = convertParcel(args[i + 4]);
+			parcels[i] = convertParcel(args[i + differentArguments]);
 		}
 		Address sourceAddress = new Address(Country.getCountry(args[2]), args[3]);
 		TableCreator creator = new TableCreator(args[1], sourceAddress, parcels);

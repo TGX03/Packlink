@@ -35,7 +35,7 @@ public final class API {
 	/**
 	 * The requested language for any names.
 	 */
-	private static final String LANGUAGE = "?language=en_US";
+	private static String language = "?language=en_US";
 
 	/**
 	 * The flag specifying a zip code in JSON.
@@ -63,6 +63,14 @@ public final class API {
 	 */
 	public static void setApiKey(@NotNull String key) {
 		API_KEY = key;
+	}
+
+	/**
+	 * Sets the language to ask the API for, so that the resulting country names are in the given language.
+	 * @param lang The language given in the format en-US
+	 */
+	public static void setLanguage(String lang) {
+		language = "?language=" + lang;
 	}
 
 	/**
@@ -110,7 +118,7 @@ public final class API {
 	 * @throws IOException Something went wrong during communication with the API. Read the error I guess.
 	 */
 	public static void initializeCountries() throws IOException {
-		JSONArray arr = new JSONArray(queryURL(API + COUNTRIES + LANGUAGE));
+		JSONArray arr = new JSONArray(queryURL(API + COUNTRIES + language));
 		for (int i = 0; i < arr.length(); i++) {
 			Country.getCountry(arr.getJSONObject(i));
 		}
@@ -129,7 +137,7 @@ public final class API {
 
 			// Gets done in multiple threads as that speeds it up massively.
 			new Thread(() -> {
-				String url = API + POSTAL_CODES + country.iso + LANGUAGE + "&q=";   // Don't ask me why the q is required.
+				String url = API + POSTAL_CODES + country.iso + language + "&q=";   // Don't ask me why the q is required.
 				try {
 					JSONArray arr = new JSONArray(queryURL(url));
 					for (int i = 0; i < arr.length(); i++) {
