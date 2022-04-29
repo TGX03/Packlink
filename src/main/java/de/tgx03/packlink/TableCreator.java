@@ -72,11 +72,11 @@ public final class TableCreator {
 		API.initializePostalCodes();
 		Service.setTax(tax);
 		int differentArguments = 4;
-		Parcel[] parcels = new Parcel[args.length - differentArguments];
 		if (LANG_PATTERN.matcher(args[4]).matches()) {
 			API.setLanguage(args[4]);
 			differentArguments++;
 		}
+		Parcel[] parcels = new Parcel[args.length - differentArguments];
 		for (int i = 0; i < parcels.length; i++) {
 			parcels[i] = convertParcel(args[i + differentArguments]);
 		}
